@@ -1,10 +1,12 @@
-package com.stepavlas.movieTheatre.dao;
+package com.stepavlas.movieTheatre.dao.impl;
 
 import com.stepavlas.movieTheatre.entities.User;
+import com.stepavlas.movieTheatre.exceptions.IncorrectUserException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,11 +18,20 @@ public class UserDaoTest {
 
     @Before
     public void init(){
-        userDao.fillDbWithUsers();
+        Map<Long, User> users = new HashMap<>();
+        User user1 = new User(1, "Sergei", "Shnaps", "SergeiShnaps@example.com");
+        users.put(user1.getId(), user1);
+        User user2 = new User(2, "Pavel", "Velocipedov", "PavelVelosipedov@mail.com");
+        users.put(user2.getId(), user2);
+        User user3 = new User(3, "Vitaliy", "Prishin", "VitaliyPrishin@gmail.com");
+        users.put(user3.getId(), user3);
+        User user4 = new User(4, "Pavel", "Velocipedov", "PashaVelociped@yandex.ru");
+        users.put(user4.getId(), user4);
+        userDao.setUsers(users);
     }
 
     @Test
-    public void findUserByIdTest(){
+    public void findUserByIdTest() throws IncorrectUserException{
         User user1 = new User();
         user1.setId(2);
         List<User> users = userDao.findUsers(user1);
@@ -31,7 +42,7 @@ public class UserDaoTest {
     }
 
     @Test
-    public void findUserByEmailTest(){
+    public void findUserByEmailTest() throws IncorrectUserException{
         User user1 = new User();
         user1.setEmail("SergeiShnaps@example.com");
         List<User> users = userDao.findUsers(user1);
@@ -42,7 +53,7 @@ public class UserDaoTest {
     }
 
     @Test
-    public void findUserByNameTest(){
+    public void findUserByNameTest() throws IncorrectUserException{
         User user1 = new User();
         user1.setFirstName("Pavel");
         user1.setLastName("Velocipedov");
@@ -54,8 +65,12 @@ public class UserDaoTest {
     @Test
     public void addUserTest(){
         User user1 = new User("Leonid", "Antonitov", "LeoAntonitov@example.com");
-        userDao.add(user1);
-        Map<Long, User> users = UserDaoImpl.getUsers();
+        try {
+            userDao.add(user1);
+        } catch (IncorrectUserException e) {
+            Assert.fail("add method threw IncorrectUserException with message:" + e.getMessage());
+        }
+        Map<Long, User> users = userDao.getUsers();
         Assert.assertEquals(5, users.size());
         user1 = users.get((long)5);
         User user2 = new User(5, "Leonid", "Antonitov", "LeoAntonitov@example.com");
@@ -64,10 +79,14 @@ public class UserDaoTest {
 
     @Test
     public void updateUserTest(){
-        Map<Long, User> users = UserDaoImpl.getUsers();
+        Map<Long, User> users = userDao.getUsers();
         User oldUser = users.get((long)2);
         User user1 = new User(2, "Sergei", "Klimov", "SergKlimov@example.com");
-        userDao.update(user1);
+        try {
+            userDao.update(user1);
+        } catch (IncorrectUserException e) {
+            Assert.fail("add method threw IncorrectUserException with message:" + e.getMessage());
+        }
         User newUser = users.get((long)2);
         Assert.assertEquals(4, users.size());
         Assert.assertFalse(usersAreEqual(oldUser, newUser));
@@ -76,17 +95,21 @@ public class UserDaoTest {
 
     @Test
     public void removeUserTest(){
-        Map<Long, User> oldUsers = UserDaoImpl.getUsers();
+        Map<Long, User> oldUsers = userDao.getUsers();
         int oldSize = oldUsers.size();
         User user = new User();
         user.setId(3);
 
-        userDao.remove(user);
+        try {
+            userDao.remove(user);
+        } catch (IncorrectUserException e) {
+            Assert.fail("remove method threw IncorrectUserException with message:" + e.getMessage());
+        }
 
-        Map<Long, User> newUsers = UserDaoImpl.getUsers();
+        Map<Long, User> newUsers = userDao.getUsers();
         int newSize = newUsers.size();
         Assert.assertEquals(oldSize - 1, newSize);
-        Assert.assertFalse(newUsers.containsKey("3"));
+        Assert.assertFalse(newUsers.containsKey((long)3));
     }
 
     private boolean usersAreEqual(User user1, User user2){

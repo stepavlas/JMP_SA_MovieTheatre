@@ -1,7 +1,9 @@
-package com.stepavlas.movieTheatre.dao;
+package com.stepavlas.movieTheatre.dao.impl;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.stepavlas.movieTheatre.dao.UserDao;
 import com.stepavlas.movieTheatre.entities.User;
+import com.stepavlas.movieTheatre.exceptions.IncorrectUserException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,45 +14,51 @@ import java.util.Map;
  * Created by Степан on 17.03.2016.
  */
 public class UserDaoImpl implements UserDao {
-    private static Map<Long, User> users = new HashMap<>();
+    private Map<Long, User> users = new HashMap<>();
 
     @Override
-    public List<User> findUsers(User user) {
-        // add exception
-        List<User> result = null;
+    public List<User> findUsers(User user) throws IncorrectUserException{
+        validate(user);
+        List<User> result = new ArrayList<>();
         if (user.getId() != 0){
             User dbUser = getById(user);
-            result = createListWithUser(dbUser);
+            if (dbUser != null){
+                result.add(dbUser);
+            }
         } else if (user.getEmail() != null){
             User dbUser = findByEmail(user);
-            result = createListWithUser(dbUser);
+            if (dbUser != null){
+                result.add(dbUser);
+            }
         } else if (user.getFirstName() != null && user.getLastName() != null){
+            validate(user);
             result = findByName(user);
-        }
-        // return empty list
-        if (result == null || result.isEmpty()){
-            return null;
         }
         return result;
     }
 
-    private List<User> createListWithUser(User user) {
-        List<User> users = null;
-        if (user != null) {
-            users = new ArrayList<>();
-            users.add(user);
+    private void validate(User user) throws IncorrectUserException{
+        if (user == null){
+            throw new IllegalArgumentException("User argument is null");
         }
-        return users;
+        if (user.getId() < 0){
+            throw new IncorrectUserException("user has negative id");
+        }
+        if (user.getEmail() != null && !user.getEmail().contains("@")){
+            throw new IncorrectUserException("user has incorrect email");
+        }
     }
 
     @Override
-    public User getById(User user) {
-        // add exception
+    public User getById(User user) throws IncorrectUserException{
+        validate(user);
+        if (user.getId() == 0){
+            throw new IncorrectUserException("User doesn't have id");
+        }
         return users.get(user.getId());
     }
 
-    private User findByEmail(User user) {
-        List<User> result = new ArrayList<User>();
+    private User findByEmail(User user) throws IncorrectUserException{
         for (User dbUser: users.values()){
             if (user.getEmail().equals(dbUser.getEmail())){
                 return dbUser;
@@ -59,7 +67,7 @@ public class UserDaoImpl implements UserDao {
         return null;
     }
 
-    private List<User> findByName(User user){
+    private List<User> findByName(User user) throws IncorrectUserException{
         List<User> result = new ArrayList<User>();
         for (User dbUser: users.values()){
             if (user.getLastName().equals(dbUser.getLastName()) &&
@@ -71,13 +79,14 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void add(User user) {
+    public void add(User user) throws IncorrectUserException{
+        validate(user);
         if (user.getId() != 0 || user.getEmail() == null || user.getFirstName() == null ||
                 user.getLastName() == null){
-            throw new IllegalArgumentException("User doesn't have mandatory field for adding");
+            throw new IncorrectUserException("User doesn't have mandatory field for adding");
         }
         List<User> dbUsers = findUsers(user);
-        if (dbUsers != null && !dbUsers.isEmpty()) {
+        if (!dbUsers.isEmpty()) {
             throw new IllegalArgumentException("User already exists");
         }
         user.setId(users.size() + 1);
@@ -85,10 +94,11 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User update(User user){
+    public User update(User user) throws IncorrectUserException{
+        validate(user);
         if (user.getId() == 0 || user.getEmail() == null || user.getFirstName() == null ||
                 user.getLastName() == null){
-            throw new IllegalArgumentException("User doesn't have mandatory field or has incorrect id " +
+            throw new IncorrectUserException("User doesn't have mandatory field or has incorrect id " +
                     "for updating");
         }
         User dbUser = getById(user);
@@ -101,9 +111,10 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User remove(User user){
+    public User remove(User user) throws IncorrectUserException{
+        validate(user);
         if (user.getId() == 0){
-            throw new IllegalArgumentException("User doesn't have mandatory field 'id' " +
+            throw new IncorrectUserException("User doesn't have mandatory field 'id' " +
                     "for operation remove");
         }
         User removedUser = users.remove(user.getId());
@@ -111,20 +122,12 @@ public class UserDaoImpl implements UserDao {
     }
 
     @VisibleForTesting
-    protected static Map<Long, User> getUsers(){
-        return users;
+    protected void setUsers(Map<Long, User> users){
+        this.users = users;
     }
 
     @VisibleForTesting
-    protected void fillDbWithUsers(){
-        users = new HashMap<>();
-        User user1 = new User(1, "Sergei", "Shnaps", "SergeiShnaps@example.com");
-        UserDaoImpl.users.put(user1.getId(), user1);
-        User user2 = new User(2, "Pavel", "Velocipedov", "PavelVelosipedov@mail.com");
-        UserDaoImpl.users.put(user2.getId(), user2);
-        User user3 = new User(3, "Vitaliy", "Prishin", "VitaliyPrishin@gmail.com");
-        UserDaoImpl.users.put(user3.getId(), user3);
-        User user4 = new User(4, "Pavel", "Velocipedov", "PashaVelociped@yandex.ru");
-        UserDaoImpl.users.put(user4.getId(), user4);
+    protected Map<Long, User> getUsers(){
+        return users;
     }
 }
