@@ -31,7 +31,6 @@ public class UserDaoImpl implements UserDao {
                 result.add(dbUser);
             }
         } else if (user.getFirstName() != null && user.getLastName() != null){
-            validate(user);
             result = findByName(user);
         }
         return result;
@@ -68,7 +67,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     private List<User> findByName(User user) throws IncorrectUserException{
-        List<User> result = new ArrayList<User>();
+        List<User> result = new ArrayList<>();
         for (User dbUser: users.values()){
             if (user.getLastName().equals(dbUser.getLastName()) &&
                     user.getFirstName().equals(dbUser.getFirstName())){
