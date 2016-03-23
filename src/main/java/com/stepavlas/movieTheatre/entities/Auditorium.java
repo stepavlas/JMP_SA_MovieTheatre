@@ -14,6 +14,21 @@ public class Auditorium {
         this.vipSeats = vipSeats;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Auditorium)) return false;
+
+        Auditorium that = (Auditorium) o;
+
+        return getName().equals(that.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return getName().hashCode();
+    }
+
     public String getName() {
         return name;
     }

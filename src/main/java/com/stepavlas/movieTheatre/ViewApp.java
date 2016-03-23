@@ -30,5 +30,7 @@ public class ViewApp {
 
         String vipSeats = auditoriumService.getVipSeats("Hall1");
         System.out.println(vipSeats);
+
+        System.out.println(15 % 10);
     }
 }

@@ -1,5 +1,7 @@
 package com.stepavlas.movieTheatre.entities;
 
+import java.util.Date;
+
 /**
  * Created by admin on 17.03.2016.
  */
@@ -7,6 +9,8 @@ public class User extends Entity{
     private String firstName;
     private String lastName;
     private String email;
+    private Date birthDate;
+    private int numTickets;
 
     public User() {
     }
@@ -20,6 +24,14 @@ public class User extends Entity{
     public User(long id, String firstName, String lastName, String email) {
         this(firstName, lastName, email);
         this.id = id;
+    }
+
+    public int getNumTickets() {
+        return numTickets;
+    }
+
+    public void setNumTickets(int numTickets) {
+        this.numTickets = numTickets;
     }
 
     public String getEmail() {
@@ -44,6 +56,14 @@ public class User extends Entity{
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
     }
 
     @Override

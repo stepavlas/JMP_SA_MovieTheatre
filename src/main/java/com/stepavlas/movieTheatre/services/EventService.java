@@ -1,9 +1,14 @@
 package com.stepavlas.movieTheatre.services;
 
 import com.stepavlas.movieTheatre.dao.EventDao;
+import com.stepavlas.movieTheatre.dao.ShowDao;
+import com.stepavlas.movieTheatre.entities.Auditorium;
 import com.stepavlas.movieTheatre.entities.Event;
+import com.stepavlas.movieTheatre.entities.Show;
 import com.stepavlas.movieTheatre.exceptions.IncorrectEventException;
+import com.stepavlas.movieTheatre.exceptions.IncorrectShowException;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -11,6 +16,7 @@ import java.util.List;
  */
 public class EventService {
     EventDao eventDao;
+    ShowDao showDao;
 
     public void createEvent(String eventName, int year, String country, String director, int basePrice){
         Event event = new Event(eventName, year, country, director, basePrice);
@@ -49,5 +55,20 @@ public class EventService {
 
     public List<Event> getAll(){
         return eventDao.getAll();
+    }
+
+    public boolean assignAuditorium(String eventName, Auditorium auditorium, Date date){
+        Event event = getByName(eventName);
+        if (event == null){
+            return false;
+        }
+        Show show = new Show(event, date, auditorium);
+        try {
+            showDao.add(show);
+            return true;
+        } catch (IncorrectEventException | IncorrectShowException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
