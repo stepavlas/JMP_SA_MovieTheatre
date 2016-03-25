@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/util
+    http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+    <import resource="classpath:daoConfig.xml"/>
+
+    <bean id = "calendar" class="java.util.Calendar" factory-method="getInstance"/>
+
+    <bean id="userService" class="com.stepavlas.movieTheatre.UserService">
+        <constructor-arg ref="userDao"/>
+    </bean>
+
+    <bean id = "viewApp" class="com.stepavlas.movieTheatre.ViewApp">
+        <constructor-arg ref="calendar"/>
+        <constructor-arg ref="userService"/>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:auditoriums.properties</value>
+            </list>
+        </property>
+        <property name="ignoreResourceNotFound" value="false" />
+    </bean>
+
+    <bean id="auditorium1" class="com.stepavlas.movieTheatre.Auditorium">
+        <constructor-arg value="hall1"/>
+        <constructor-arg value="${hall1.numberOfSeats}"/>
+        <constructor-arg value="${hall1.vipSeats}"/>
+    </bean>
+
+    <bean id="auditorium2" class="com.stepavlas.movieTheatre.Auditorium">
+        <constructor-arg value="hall2"/>
+        <constructor-arg value="${hall2.numberOfSeats}"/>
+        <constructor-arg value="${hall2.vipSeats}"/>
+    </bean>
+
+    <bean id="auditoriumService" class="com.stepavlas.movieTheatre.AuditoriumService">
+        <property name="auditoriums">
+            <list>
+                <ref bean="auditorium1"/>
+                <ref bean="auditorium2"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="eventService" class="com.stepavlas.movieTheatre.EventService">
+        <constructor-arg ref="eventDao"/>
+        <constructor-arg ref="showDao"/>
+    </bean>
+</beans>
