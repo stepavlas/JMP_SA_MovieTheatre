@@ -16,6 +16,7 @@
         <junit.ver>4.12</junit.ver>
         <guava.ver>19.0</guava.ver>
         <theatre.ver>1.0-SNAPSHOT</theatre.ver>
+        <mockito.ver>1.10.19</mockito.ver>
     </properties>
 
    <modules>
@@ -49,6 +50,12 @@
                <groupId>com.stepavlas.movieTheatre</groupId>
                <artifactId>movieDao</artifactId>
                <version>${theatre.ver}</version>
+           </dependency>
+           <dependency>
+               <groupId>org.mockito</groupId>
+               <artifactId>mockito-core</artifactId>
+               <version>${mockito.ver}</version>
+               <scope>test</scope>
            </dependency>
        </dependencies>
    </dependencyManagement>
