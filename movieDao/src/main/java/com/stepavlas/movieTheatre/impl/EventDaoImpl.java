@@ -157,13 +157,11 @@ public class EventDaoImpl implements EventDao {
         return events.get(event.getId());
     }
 
-    @VisibleForTesting
-    protected Map<Long, Event> getEvents() {
+    public Map<Long, Event> getEvents() {
         return events;
     }
 
-    @VisibleForTesting
-    protected void setEvents(Map<Long, Event> events) {
+    public void setEvents(Map<Long, Event> events) {
         this.events = events;
     }
 

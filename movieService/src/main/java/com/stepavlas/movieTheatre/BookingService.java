@@ -17,6 +17,13 @@ public class BookingService {
     private EventDao eventDao;
     private UserDao userDao;
 
+    public BookingService(DiscountService discountService, ShowDao showDao, EventDao eventDao, UserDao userDao) {
+        this.discountService = discountService;
+        this.showDao = showDao;
+        this.eventDao = eventDao;
+        this.userDao = userDao;
+    }
+
     public int getTicketPrice(Event event, Date date, int row, int place, User user) {
         try {
             Event dbEvent = findEvent(event);

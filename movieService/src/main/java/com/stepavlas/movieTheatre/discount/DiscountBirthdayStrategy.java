@@ -9,6 +9,17 @@ import java.util.Calendar;
  * Created by Степан on 23.03.2016.
  */
 public class DiscountBirthdayStrategy implements DiscountStrategy {
+    public int DISCOUNTVALUE = 5;
+
+    public DiscountBirthdayStrategy(int DISCOUNTVALUE) {
+        this.DISCOUNTVALUE = DISCOUNTVALUE;
+    }
+
+    @Override
+    public int getDiscountValue() {
+        return DISCOUNTVALUE;
+    }
+
     public int countDiscount(User user, Show show){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(show.getDateTime());
@@ -17,7 +28,7 @@ public class DiscountBirthdayStrategy implements DiscountStrategy {
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         if (user.getBirthDate().equals(calendar.getTime())){
-            return 5;
+            return DISCOUNTVALUE;
         }
         return 0;
     }

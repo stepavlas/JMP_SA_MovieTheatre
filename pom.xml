@@ -17,10 +17,11 @@
         <guava.ver>19.0</guava.ver>
         <theatre.ver>1.0-SNAPSHOT</theatre.ver>
         <mockito.ver>1.10.19</mockito.ver>
+        <aspectj.ver>1.8.9</aspectj.ver>
     </properties>
 
    <modules>
-       <module>movieApi</module>
+       <module>movieDomain</module>
        <module>movieDao</module>
    </modules>
 
@@ -43,7 +44,7 @@
            </dependency>
            <dependency>
                <groupId>com.stepavlas.movieTheatre</groupId>
-               <artifactId>movieApi</artifactId>
+               <artifactId>movieDomain</artifactId>
                <version>${theatre.ver}</version>
            </dependency>
            <dependency>
@@ -56,6 +57,11 @@
                <artifactId>mockito-core</artifactId>
                <version>${mockito.ver}</version>
                <scope>test</scope>
+           </dependency>
+           <dependency>
+               <groupId>org.aspectj</groupId>
+               <artifactId>aspectjweaver</artifactId>
+               <version>${aspectj.ver}</version>
            </dependency>
        </dependencies>
    </dependencyManagement>

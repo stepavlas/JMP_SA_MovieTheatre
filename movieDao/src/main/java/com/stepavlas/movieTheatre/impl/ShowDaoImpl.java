@@ -129,17 +129,13 @@ public class ShowDaoImpl implements ShowDao {
         return timeDifference <= 10800000;
     }
 
-    @VisibleForTesting
-    protected void setEventDao(EventDao eventDao){
+    public void setEventDao(EventDao eventDao){
         this.eventDao = eventDao;
     }
 
-    @VisibleForTesting
-    protected void setShows(Map<Long, Show> shows) {
+    public void setShows(Map<Long, Show> shows) {
         this.shows = shows;
     }
-
-    @VisibleForTesting
 
     public Map<Long, Show> getShows() {
         return shows;

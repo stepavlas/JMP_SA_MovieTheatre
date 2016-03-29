@@ -12,6 +12,10 @@ import java.util.List;
 public class DiscountService {
     private List<DiscountStrategy> discountStrategies;
 
+    public DiscountService(List<DiscountStrategy> discountStrategies) {
+        this.discountStrategies = discountStrategies;
+    }
+
     public int getDiscount(User user, Show show){
         int discount = 0;
         for (DiscountStrategy strategy: discountStrategies){

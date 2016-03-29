@@ -19,4 +19,8 @@ public class Ticket {
     public int getPlace(){
         return row * place;
     }
+
+    public Show getShow() {
+        return show;
+    }
 }

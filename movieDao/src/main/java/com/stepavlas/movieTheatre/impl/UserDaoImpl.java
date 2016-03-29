@@ -120,13 +120,11 @@ public class UserDaoImpl implements UserDao {
         return removedUser;
     }
 
-    @VisibleForTesting
-    protected void setUsers(Map<Long, User> users){
+    public void setUsers(Map<Long, User> users){
         this.users = users;
     }
 
-    @VisibleForTesting
-    protected Map<Long, User> getUsers(){
+    public Map<Long, User> getUsers(){
         return users;
     }
 }

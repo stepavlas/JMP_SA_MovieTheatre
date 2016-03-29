@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
     http://www.springframework.org/schema/util
-    http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+    http://www.springframework.org/schema/util/spring-util-3.2.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
     <import resource="classpath:daoConfig.xml"/>
+
+    <aop:aspectj-autoproxy/>
+
+    <bean id="counterAspect" class="com.stepavlas.aspects.CounterAspect">
+        <property name="eventDao" ref="eventDao"/>
+    </bean>
+
+    <bean id="luckyWinnerAspect" class="com.stepavlas.aspects.LuckyWinnerAspect"/>
 
     <bean id = "calendar" class="java.util.Calendar" factory-method="getInstance"/>
 
@@ -50,5 +59,25 @@
     <bean id="eventService" class="com.stepavlas.movieTheatre.EventService">
         <constructor-arg ref="eventDao"/>
         <constructor-arg ref="showDao"/>
+    </bean>
+
+    <bean id="discountService" class="com.stepavlas.movieTheatre.discount.DiscountService">
+        <constructor-arg>
+            <list>
+                <bean class="com.stepavlas.movieTheatre.discount.DiscountBirthdayStrategy">
+                    <constructor-arg value="5"/>
+                </bean>
+                <bean class="com.stepavlas.movieTheatre.discount.DiscountTicketsStrategy">
+                    <constructor-arg value="50"/>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="bookingService" class="com.stepavlas.movieTheatre.BookingService">
+        <constructor-arg ref="discountService"/>
+        <constructor-arg ref="showDao"/>
+        <constructor-arg ref="eventDao"/>
+        <constructor-arg ref="userDao"/>
     </bean>
 </beans>
