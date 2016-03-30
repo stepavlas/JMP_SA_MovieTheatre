@@ -1,6 +1,7 @@
 package com.stepavlas.movieTheatre;
 
 import com.stepavlas.movieTheatre.discount.DiscountService;
+import com.stepavlas.movieTheatre.discount.DiscountStrategy;
 import com.stepavlas.movieTheatre.exceptions.IncorrectEventException;
 import com.stepavlas.movieTheatre.exceptions.IncorrectShowException;
 import com.stepavlas.movieTheatre.exceptions.IncorrectUserException;
@@ -29,8 +30,14 @@ public class BookingService {
             Event dbEvent = findEvent(event);
             Show dbShow = findShow(dbEvent, date);
 
-            int discount = discountService.getDiscount(user, dbShow);
-            double price = dbEvent.getBasePrice() * discount / 100;
+            DiscountStrategy discountStrategy = discountService.getDiscount(user, dbShow);
+            double price;
+            if (discountStrategy != null) {
+                int discount = discountStrategy.getDiscountValue();
+                price = dbEvent.getBasePrice() * discount / 100;
+            } else {
+                price = dbEvent.getBasePrice();
+            }
             if (event.getRating() == Rating.HIGh){
                 price = 1.2 * price;
             }

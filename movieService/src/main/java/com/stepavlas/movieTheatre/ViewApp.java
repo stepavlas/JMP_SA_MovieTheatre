@@ -57,6 +57,16 @@ public class ViewApp {
 
         bookingService.getTicketPrice(event, showTime, 2, 4, user);
 
+        user.setNumTickets(10);
+
+        bookingService.getTicketPrice(event, showTime, 2, 4, user);
+        bookingService.getTicketPrice(event, showTime, 2, 4, user);
+
+        user.setBirthDate(showTime);
+        user.setNumTickets(11);
+
+        bookingService.getTicketPrice(event, showTime, 2, 4, user);
+
         try {
             bookingService.bookTicket(event, user, showTime, 2, 4);
         } catch (IncorrectEventException | IncorrectShowException | IncorrectUserException e) {

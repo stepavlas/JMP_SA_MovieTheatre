@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
     http://www.springframework.org/schema/util
     http://www.springframework.org/schema/util/spring-util-3.2.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
@@ -14,6 +15,8 @@
     </bean>
 
     <bean id="luckyWinnerAspect" class="com.stepavlas.aspects.LuckyWinnerAspect"/>
+
+    <bean id="discountAspect" class="com.stepavlas.aspects.DiscountAspect"/>
 
     <bean id = "calendar" class="java.util.Calendar" factory-method="getInstance"/>
 
@@ -61,17 +64,18 @@
         <constructor-arg ref="showDao"/>
     </bean>
 
+    <util:list id="strategies">
+        <bean class="com.stepavlas.movieTheatre.discount.DiscountBirthdayStrategy">
+            <constructor-arg value="5"/>
+            <constructor-arg ref="calendar"/>
+        </bean>
+        <bean class="com.stepavlas.movieTheatre.discount.DiscountTicketsStrategy">
+            <constructor-arg value="50"/>
+        </bean>
+    </util:list>
+
     <bean id="discountService" class="com.stepavlas.movieTheatre.discount.DiscountService">
-        <constructor-arg>
-            <list>
-                <bean class="com.stepavlas.movieTheatre.discount.DiscountBirthdayStrategy">
-                    <constructor-arg value="5"/>
-                </bean>
-                <bean class="com.stepavlas.movieTheatre.discount.DiscountTicketsStrategy">
-                    <constructor-arg value="50"/>
-                </bean>
-            </list>
-        </constructor-arg>
+        <constructor-arg ref="strategies"/>
     </bean>
 
     <bean id="bookingService" class="com.stepavlas.movieTheatre.BookingService">

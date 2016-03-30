@@ -9,5 +9,5 @@ import com.stepavlas.movieTheatre.User;
 public interface DiscountStrategy {
     int getDiscountValue();
 
-    int countDiscount(User user, Show show);
+    boolean hasDiscount(User user, Show show);
 }

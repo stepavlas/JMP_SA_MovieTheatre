@@ -19,10 +19,12 @@ public class DiscountTicketsStrategy implements DiscountStrategy{
     }
 
     @Override
-    public int countDiscount(User user, Show show){
-        if (user.getNumTickets() % 10 == 0){
-            return DISCOUNTVALUE;
-        }
-        return 0;
+    public boolean hasDiscount(User user, Show show){
+        return (user.getNumTickets() != 0 && user.getNumTickets() % 10 == 0);
+    }
+
+    @Override
+    public String toString() {
+        return "DiscountTicketsStrategy";
     }
 }

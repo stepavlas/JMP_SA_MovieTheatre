@@ -16,14 +16,15 @@ public class DiscountService {
         this.discountStrategies = discountStrategies;
     }
 
-    public int getDiscount(User user, Show show){
-        int discount = 0;
+    public DiscountStrategy getDiscount(User user, Show show){
+        DiscountStrategy result = null;
         for (DiscountStrategy strategy: discountStrategies){
-            int strategyDisc = strategy.countDiscount(user, show);
-            if (discount < strategyDisc){
-                discount = strategyDisc;
+            if (strategy.hasDiscount(user, show)){
+                if (result == null || strategy.getDiscountValue() > result.getDiscountValue()){
+                    result = strategy;
+                }
             }
         }
-        return discount;
+        return result;
     }
 }
